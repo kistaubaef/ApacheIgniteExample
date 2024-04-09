@@ -46,4 +46,26 @@ public class TestBusinessLogicService {
     public List<PersonEntity> processGetAll() {
         return testServiceRepository.getAll();
     }
+
+
+    /**
+     * Deletes a person from the repository.
+     * @param id Person id
+     */
+    public void processDelete(final String id) {
+        testServiceRepository.delete(UUID.fromString(id));
+    }
+    /**
+     * Updates a person.
+     * @param id Person id
+     * @param person Person
+     * @return Updated person
+    */
+    public PersonEntity processUpdate(final String id, final Person person) {
+        PersonEntity personEntity = testServiceRepository.get(UUID.fromString(id));
+        personEntity.setName(person.getName());
+        testServiceRepository.update(personEntity);
+        return personEntity;
+    }
+
 }

@@ -59,4 +59,33 @@ public class TestServiceController {
         List<PersonEntity> personEntities = testBusinessLogicService.processGetAll();
         return new ResponseEntity<>(personEntities, HttpStatus.OK);
     }
+
+
+    /**
+     * DELETE /delete/{id}.
+     * @param id Person id
+     * @return Response with status code
+     */
+    @DeleteMapping(path = {"/delete/{id}"})
+    public ResponseEntity<Void> deletePerson(@PathVariable final String id) {
+        testBusinessLogicService.processDelete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * PUT /update/{id}.
+     * @param id Person id
+     * @param person Person
+     * @return Response with status code
+    **/
+    @PutMapping(
+        path = {"/update/{id}"},
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<PersonEntity> updatePerson(@PathVariable final String id, @RequestBody final Person person) {
+        testBusinessLogicService.processUpdate(id, person);
+        PersonEntity personEntity = testBusinessLogicService.processGet(id);
+        return new ResponseEntity<>(personEntity, HttpStatus.OK);
+    }
 }
