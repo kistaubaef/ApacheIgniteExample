@@ -1,5 +1,6 @@
 package bdtc.lab3.config;
 
+import bdtc.lab3.jobs.Scheduler;
 import bdtc.lab3.model.PersonEntity;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteSpringBean;
@@ -11,10 +12,10 @@ import org.apache.ignite.spi.discovery.DiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.TcpDiscoveryIpFinder;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder;
+import org.apache.ignite.spi.metric.jmx.JmxMetricExporterSpi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.Collections;
 import java.util.UUID;
 
@@ -66,7 +67,6 @@ public class IgniteConf {
         return discoverySpi;
     }
 
-
     /**
      * Initializes IgniteConfiguration.
      * @param discoverySpi DiscoverySpi
@@ -74,12 +74,13 @@ public class IgniteConf {
      */
     @Bean
     public IgniteConfiguration igniteConfiguration(final DiscoverySpi discoverySpi) {
+        JmxMetricExporterSpi jmxSpi = new JmxMetricExporterSpi();
         IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
         igniteConfiguration.setIgniteInstanceName(INSTANCE_NAME.toString());
         igniteConfiguration.setPeerClassLoadingEnabled(true);
         igniteConfiguration.setClientMode(clientMode);
         igniteConfiguration.setDiscoverySpi(discoverySpi);
-
+        igniteConfiguration.setMetricExporterSpi(jmxSpi);
         return igniteConfiguration;
     }
 
@@ -94,6 +95,17 @@ public class IgniteConf {
         igniteSpringBean.setConfiguration(configuration);
 
         return igniteSpringBean;
+    }
+
+    /**
+     * Initializes Scheduler.
+     * @param configuration IgniteConfiguration
+     * @return Scheduler
+     */
+    @Bean
+    Scheduler scheduler(
+            final IgniteConfiguration configuration) {
+        return new Scheduler(configuration);
     }
 
     /**

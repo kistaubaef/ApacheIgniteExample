@@ -17,15 +17,14 @@ import java.util.UUID;
 public class ServiceConf {
     /**
      * Initializes TestServiceRepository.
-     * @param ignite Ignite
+     * @param ignite          Ignite
      * @param personCacheConf Cache configuration for persons
      * @return TestServiceRepository
      */
     @Bean
     TestServiceRepository testServiceRepository(
-        final Ignite ignite,
-        final CacheConfiguration<UUID, PersonEntity> personCacheConf
-    ) {
+            final Ignite ignite,
+            final CacheConfiguration<UUID, PersonEntity> personCacheConf) {
         return new TestServiceRepository(ignite, personCacheConf);
     }
 
@@ -36,8 +35,7 @@ public class ServiceConf {
      */
     @Bean
     TestBusinessLogicService testBusinessLogicService(
-        final TestServiceRepository testServiceRepository
-    ) {
+            final TestServiceRepository testServiceRepository) {
         return new TestBusinessLogicService(testServiceRepository);
     }
 
@@ -48,8 +46,7 @@ public class ServiceConf {
      */
     @Bean
     TestServiceController testServiceController(
-        final TestBusinessLogicService testBusinessLogicService
-    ) {
+            final TestBusinessLogicService testBusinessLogicService) {
         return new TestServiceController(testBusinessLogicService);
     }
 }
