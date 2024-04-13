@@ -118,7 +118,7 @@ public class IgniteConf {
      * @return Scheduler
      */
     @Bean
-    Scheduler scheduler(
+    public Scheduler scheduler(
             final JmxMetricExporterSpi jmxSpi) {
         return new Scheduler(jmxSpi);
     }
