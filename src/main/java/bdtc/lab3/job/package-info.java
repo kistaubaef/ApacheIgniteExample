@@ -1,4 +1,4 @@
 /**
  * This module provides Spring scheduled jobs.
  */
-package bdtc.lab3.jobs;
+package bdtc.lab3.job;

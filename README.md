@@ -11,3 +11,6 @@ POST http://localhost:8080/person/create
 
 Проверка наличия записи:
 GET http://localhost:8080/person/get/all
+
+### Запуск программы
+Для старта программы нужно запусть скрипт: `./start.sh`
