@@ -1,6 +1,4 @@
-package bdtc.lab3.jobs;
-
-import org.apache.ignite.configuration.IgniteConfiguration;
+package bdtc.lab3.job;
 import org.apache.ignite.spi.metric.ReadOnlyMetricRegistry;
 import org.apache.ignite.spi.metric.jmx.JmxMetricExporterSpi;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,15 +9,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Scheduler {
-    private IgniteConfiguration configuration;
+    private JmxMetricExporterSpi jmxSpi;
+
 
     /**
-     * Creates a new instance of the Scheduler class.
-     * @param configuration the Ignite configuration
+     * Constructs Scheduler.
+     * @param jmxSpi JMX metrics exporter
      */
     public Scheduler(
-            final IgniteConfiguration configuration) {
-        this.configuration = configuration;
+            final JmxMetricExporterSpi jmxSpi) {
+        this.jmxSpi = jmxSpi;
     }
 
     /**
@@ -27,13 +26,11 @@ public class Scheduler {
      */
     @Scheduled(cron = "*/10 * * * * *")
     public void retrieveIgniteMetrics() {
-        JmxMetricExporterSpi jmxSpi = (JmxMetricExporterSpi) configuration.getMetricExporterSpi()[0];
         ReadOnlyMetricRegistry ioReg = jmxSpi.getSpiContext().getOrCreateMetricRegistry("io.dataregion.default");
-
         System.out.println(
                 "The total size of pages loaded to the RAM is " + ioReg.findMetric("PhysicalMemorySize").getAsString()
                         + " bytes");
-
     }
+
 
 }

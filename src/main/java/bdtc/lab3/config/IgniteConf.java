@@ -1,6 +1,6 @@
 package bdtc.lab3.config;
 
-import bdtc.lab3.jobs.Scheduler;
+import bdtc.lab3.job.Scheduler;
 import bdtc.lab3.model.PersonEntity;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteSpringBean;
@@ -40,6 +40,7 @@ public class IgniteConf {
 
     /**
      * Initializes TcpDiscoveryIpFinder.
+     *
      * @return TcpDiscoveryIpFinder
      */
     @Bean
@@ -55,6 +56,7 @@ public class IgniteConf {
 
     /**
      * Initializes DiscoverySpi.
+     *
      * @param tcpDiscoveryIpFinder TcpDiscoveryIpFinder
      * @return DiscoverySpi
      */
@@ -68,13 +70,25 @@ public class IgniteConf {
     }
 
     /**
+     * Initializes JMX metrics exporter.
+     *
+     * @return JMX metrics exporter
+     */
+    @Bean
+    public JmxMetricExporterSpi metricExporterSpi() {
+        return new JmxMetricExporterSpi();
+    }
+
+    /**
      * Initializes IgniteConfiguration.
+     *
      * @param discoverySpi DiscoverySpi
+     * @param jmxSpi       JMX metrics exporter
      * @return IgniteConfiguration
      */
     @Bean
-    public IgniteConfiguration igniteConfiguration(final DiscoverySpi discoverySpi) {
-        JmxMetricExporterSpi jmxSpi = new JmxMetricExporterSpi();
+    public IgniteConfiguration igniteConfiguration(final DiscoverySpi discoverySpi,
+            final JmxMetricExporterSpi jmxSpi) {
         IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
         igniteConfiguration.setIgniteInstanceName(INSTANCE_NAME.toString());
         igniteConfiguration.setPeerClassLoadingEnabled(true);
@@ -86,6 +100,7 @@ public class IgniteConf {
 
     /**
      * Initializes ignite.
+     *
      * @param configuration IgniteConfiguration
      * @return IgniteConfiguration
      */
@@ -93,23 +108,24 @@ public class IgniteConf {
     public Ignite ignite(final IgniteConfiguration configuration) {
         IgniteSpringBean igniteSpringBean = new IgniteSpringBean();
         igniteSpringBean.setConfiguration(configuration);
-
         return igniteSpringBean;
     }
 
     /**
      * Initializes Scheduler.
-     * @param configuration IgniteConfiguration
+     *
+     * @param jmxSpi JMX metrics exporter
      * @return Scheduler
      */
     @Bean
     Scheduler scheduler(
-            final IgniteConfiguration configuration) {
-        return new Scheduler(configuration);
+            final JmxMetricExporterSpi jmxSpi) {
+        return new Scheduler(jmxSpi);
     }
 
     /**
      * Initializes CacheConfiguration.
+     *
      * @return CacheConfiguration<UUID, PersonEntity>
      */
     @Bean
