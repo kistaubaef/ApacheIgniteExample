@@ -16,13 +16,12 @@ public class TestServiceRepository {
 
     /**
      * Constructs TestServiceRepository.
-     * @param ignite Ignite
+     * @param ignite                   Ignite
      * @param personCacheConfiguration Person cache configuration
      */
     public TestServiceRepository(
-        final Ignite ignite,
-        final CacheConfiguration<UUID, PersonEntity> personCacheConfiguration
-    ) {
+            final Ignite ignite,
+            final CacheConfiguration<UUID, PersonEntity> personCacheConfiguration) {
         this.ignite = ignite;
         this.personCacheConfiguration = personCacheConfiguration;
     }
@@ -35,6 +34,13 @@ public class TestServiceRepository {
         ignite.getOrCreateCache(personCacheConfiguration).put(personEntity.getId(), personEntity);
     }
 
+    /**
+     * Updates a person in the cache.
+     * @param personEntity Person
+     */
+    public void update(final PersonEntity personEntity) {
+        ignite.getOrCreateCache(personCacheConfiguration).put(personEntity.getId(), personEntity);
+    }
     /**
      * Retrieves person from ignite by id.
      * @param id Person id
@@ -49,8 +55,8 @@ public class TestServiceRepository {
      * @return List of persons
      */
     public List<PersonEntity> getAll() {
-        Iterable<Cache.Entry<UUID, PersonEntity>> iterable =
-            () -> ignite.getOrCreateCache(personCacheConfiguration).iterator();
+        Iterable<Cache.Entry<UUID, PersonEntity>> iterable = () -> ignite.getOrCreateCache(personCacheConfiguration)
+                .iterator();
 
         List<PersonEntity> persons = StreamSupport
                 .stream(iterable.spliterator(), false)
@@ -59,4 +65,13 @@ public class TestServiceRepository {
 
         return persons;
     }
+
+    /**
+     * Deletes a person from the cache.
+     * @param id Person id
+     */
+    public void delete(final UUID id) {
+        ignite.getOrCreateCache(personCacheConfiguration).remove(id);
+    }
+
 }

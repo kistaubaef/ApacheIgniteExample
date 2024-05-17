@@ -2,7 +2,6 @@ package bdtc.lab3.model;
 
 import java.util.Objects;
 import java.util.UUID;
-
 public final class PersonEntity {
     private UUID id;
     private String name;
